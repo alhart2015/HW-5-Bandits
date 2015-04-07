@@ -1,0 +1,22 @@
+
+Results 1:
+
+Bandit 1 - Percentage of optimal plays: 99.753
+Bandit 3 - Percentage of optimal plays: 98.006
+Bandit 11 - Percentage of optimal plays: 97.698
+Bandit 13 - Percentage of optimal plays: 86.139
+
+
+Results 2:
+
+Bandit 1 - Percentage of optimal plays: 99.794
+Bandit 1 - Cumulative Regret: 67.0
+
+Bandit 3 - Percentage of optimal plays: 98.405
+Bandit 3 - Cumulative Regret: 166.0
+
+Bandit 11 - Percentage of optimal plays: 98.123
+Bandit 11 - Cumulative Regret: 585.0
+
+Bandit 13 - Percentage of optimal plays: 84.618
+Bandit 13 - Cumulative Regret: 1531.0
