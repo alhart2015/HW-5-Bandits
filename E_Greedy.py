@@ -28,7 +28,7 @@ class Bandit(machines):
 
     def __init__(self, num_machines):
         self.total_plays = 0
-        self.c = 5.0
+        self.c = 0.15
         self.d = 0.5
         self.epsilon = 1
         self.rewards = [0.0] * num_machines
