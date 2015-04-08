@@ -1,0 +1,25 @@
+Experiment:
+
+Another policy for playing the optimal machine was the epsilon-greedy algorithm. At each play, the policy determines an epsilon value, which indicates the confidence that the machine with the highest current average reward is actually the optimal machine. Naturally, as more data is gathered, that confidence increases. For the nth play, n = 1, 2, 3, ..., we let e_n = min{1, cK/d^2n} where c and d are user-defined parameters, K = the number of machines, and n is the number of plays to this point. In our experiment, set c to be 5 and d to be 0.5. Auer et. al state that a large enough c gives a strong bound on the instantaneous regret. They offer c=5 as one such large c, hence our selection of the value of c. The d parameter, 0 < d < 1, adjusts the speed at which you gain confidence. A larger d means you are more confident quicker, and vice-versa. To give a reasonable value for d, Auer et. al suggest choosing 0 < d <= min(deltai) where deltai = u* - ui. Note that ui is the reward expectation for machine i and u* is any maximal element of the set {u1, ..., uK}.
+
+Thus with these parameters set, we ran the algorithm for 10^5 plays. At each play, we calculated the epsilon value for that play, en. With probability 1-en, we played the machine with the highest current average reward, and with probability en we played a random machine. This allowed us to continually add noise to our model, which prevents convergence on a local maximum. As more plays are made, the value of en decreases, leading to a more likely play of the estimated best machine. We call the algorithm greedy because it only ever considers playing the estimated best machine, or a random one.
+
+Results:
+
+The epsilon-greedy algorithm converged very quickly to the optimal machine. Over 10^5 runs, the bandit produced the following results:
+
+Bandit  Percentage of Optimal Plays     Cumulative Regret
+1       99.839                          360.0
+3       99.818                          374.0
+11      98.675                          1481.0
+14      98.66                           1505.0
+
+We see that in every case, the bandit played the optimal machine the overwhelming majority of the time. The cumulative regret is higher for bandits 11 and 14, as those had 10 machines to choose from, and thus took longer to converge to the correct machine. However, as we see from the graphs, the bandits did converge to the optimal machine and played it better than 98% of the time. By decreasing the value of c, we can achieve nearly perfect results. Auer et. al. tested values  of c = 0.15, 0.10, and 0.05. We replicated these results, and saw that the smallest c values lead to outstanding results. The following were produced with c = 0.05:
+
+Bandit  Percentage of Optimal Plays     Cumulative Regret
+1       99.999                          3.0
+3       99.998                          5.0
+11      98.976                          26.0
+14      98.98                           23.0
+
+These results clearly demonstrate a near-perfect playing strategy with a small c value.

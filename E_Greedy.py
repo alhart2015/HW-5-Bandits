@@ -28,7 +28,7 @@ class Bandit(machines):
 
     def __init__(self, num_machines):
         self.total_plays = 0
-        self.c = 0.15
+        self.c = 0.05
         self.d = 0.5
         self.epsilon = 1
         self.rewards = [0.0] * num_machines
@@ -81,6 +81,7 @@ class Bandit(machines):
         # self.expected_rewards[machine_just_played] = self.cumulative_rewards[machine_just_played]/self.num_plays[machine_just_played]
 
         # return
+
 
     def play(self, slots):
         machine, r = self.select_machine()
