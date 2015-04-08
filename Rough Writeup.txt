@@ -7,14 +7,16 @@ Introduction:
 The classic application of the multi-armed bandit is the slot machine problem: You are sitting at a slot machine that pays you $1 60% of the time. Do you play it safe and continue to earn a dollar most of the time? Or do you explore the other machines around you with hopes of a bigger payout? This kind of exploration-versus-exploitation problem has applications in many other fields as well, notably graphic design, game-playing, and medical research. In this experiment, we explore two algorithms to address the issue, UCB-1 and $\epsilon$-Greedy. Both algorithms attempt to explore the possible actions to determine the best one, while also playing the suspected optimal move as frequently as possible.
 
 Experiment:
+One policy that we used to implement the k-armed bandit problem was the UCB1 bandit algorithm. The UCB1 bandit is initialized by playing each machine once. This initializes the expected returns for each machine, and gives a basis for selection going forward. For each future turn, the bandit chooses to play the machine that maximizes x_j_bar + sqrt((2*ln(n))/n_j), where x_j_bar represents the average return of machine j thus far, and the second term represents the upper confidence bound for the variance of machine j. The performance of the UCB1 bandit is measured by taking the ‘regret’ of that move, represented by mu_* - mu_j, where mu_* is the return that the bandit would have received had it played the optimal machine on that turn and mu_j is the return of the machine that the bandit chose. To track and evaluate the UCB1 bandit’s performance over time, we keep track of the cumulative regret over time and the percentage of times that the bandit plays the optimal machine. The regret of the UCB1 bandit after n plays is defined by u*n- u_jsummation(1 to k IE[Tj(n)] where u* def = max u_i and IE[] denotes expectation. Our goal is to minimize the cumulative regret, which we can do by minimizing the amount of time before the bandit converges on the optimal machine. We kept track father bandit’s behavior over 10^5 rounds. 
 
-Another policy for playing the optimal machine was the $\epsilon$-greedy algorithm. At each play, the policy determines an $\epsilon$ value, which indicates the confidence that the machine with the highest current average reward is actually the optimal machine. Naturally, as more data is gathered, that confidence increases. For the nth play, n = 1, 2, 3, ..., we let e_n = min{1, cK/d^2n} where c and d are user-defined parameters, K = the number of machines, and n is the number of plays to this point. In our experiment, set c to be 5 and d to be 0.5. Auer et. al state that a large enough c gives a strong bound on the instantaneous regret. They offer c=5 as one such large c, hence our selection of the value of c. The d parameter, 0 < d < 1, adjusts the speed at which you gain confidence. A larger d means you are more confident quicker, and vice-versa. To give a reasonable value for d, Auer et. al suggest choosing 0 < d <= min(deltai) where deltai = u* - ui. Note that ui is the reward expectation for machine i and u* is any maximal element of the set {u1, ..., uK}.
+Another policy for playing the optimal machine was the epsilon-greedy algorithm. At each play, the policy determines an epsilon value, which indicates the confidence that the machine with the highest current average reward is actually the optimal machine. Naturally, as more data is gathered, that confidence increases. For the nth play, n = 1, 2, 3, ..., we let e_n = min{1, cK/d^2n} where c and d are user-defined parameters, K = the number of machines, and n is the number of plays to this point. In our experiment, set c to be 5 and d to be 0.5. Auer et. al state that a large enough c gives a strong bound on the instantaneous regret. They offer c=5 as one such large c, hence our selection of the value of c. The d parameter, 0 < d < 1, adjusts the speed at which you gain confidence. A larger d means you are more confident quicker, and vice-versa. To give a reasonable value for d, Auer et. al suggest choosing 0 < d <= min(deltai) where deltai = u* - ui. Note that ui is the reward expectation for machine i and u* is any maximal element of the set {u1, ..., uK}.
 
-Thus with these parameters set, we ran the algorithm for 10^5 plays. At each play, we calculated the $\epsilon$ value for that play, en. With probability 1-en, we played the machine with the highest current average reward, and with probability en we played a random machine. This allowed us to continually add noise to our model, which prevents convergence on a local maximum. As more plays are made, the value of en decreases, leading to a more likely play of the estimated best machine. We call the algorithm greedy because it only ever considers playing the estimated best machine, or a random one.
+Thus with these parameters set, we ran the algorithm for 10^5 plays. At each play, we calculated the epsilon value for that play, en. With probability 1-en, we played the machine with the highest current average reward, and with probability en we played a random machine. This allowed us to continually add noise to our model, which prevents convergence on a local maximum. As more plays are made, the value of en decreases, leading to a more likely play of the estimated best machine. We call the algorithm greedy because it only ever considers playing the estimated best machine, or a random one.
+
 
 Results:
 
-We impleented the UCB-1 and $\epsilon$-Greedy bandits on each of the following distributions:
+We implemented the UCB-1 and $\epsilon$-Greedy bandits on each of the following distributions:
 
 Distribution    Machine
                 1       2       3       4       5       6       7       8       9       10
@@ -22,6 +24,21 @@ Distribution    Machine
 3               0.55    0.45
 11              0.9     0.6     0.6     0.6     0.6     0.6     0.6     0.6     0.6     0.6
 14              0.55    0.45    0.45    0.45    0.45    0.45    0.45    0.45    0.45    0.45
+
+
+Over 10^5 runs, the UCB1 bandit produced the following results:
+
+Bandit  Percentage of Optimal Plays     Cumulative Regret
+1       99.738                          80.0
+3       97.946                          189.0
+11      97.993                          618.0
+14      87.374                          1330.0
+
+We see that in every case, the bandit converges on the optimal machine in logarithmic time. As we can see in the figure below:
+
+Bandit 1 and Bandit 2, the 2-armed bandits, reach a much lower maximum cumulative regret than bandits 11 and 14, the 10-armed bandits. We can see that as the bandit is given more machines to choose from, it takes longer to converge to the optimal machine. All four bandits played the best machine an overwhelming majority of the time, with bandits 1, 3, and 11 playing the optimal strategy over 97% of the time, while Bandit 14 came in just under 90% at around 87%.
+
+These results show that the UCB1 bandit algorithm works very quickly on reward distributions with fewer machines, but takes longer as the number of machines, n, increases.
 
 The $\epsilon$-greedy algorithm converged very quickly to the optimal machine. Over 10^5 runs, the bandit produced the following results:
 
